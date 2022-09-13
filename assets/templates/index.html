@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>邮箱生成器</title>
+    <script src="/assets/static/jquery.js"></script>
+    <style >
+        #form #box {
+            display: flex;
+            width: 100%;
+            height: 200px;
+        }
+
+        #name {
+            flex: 1;
+        }
+
+        #name #textarea1 {
+            width: 100%;
+            height: 100%;
+        }
+
+        #textarea2 {
+            width: 100%;
+            height: 100%;
+        }
+
+        #method_suffix {
+            flex: 1;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        #out {
+            flex: 1;
+        }
+
+        #btn {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bor {
+            border: 1px solid;
+            width: 88px;
+        }
+    </style>
+</head>
+<body>
+<form action="" id="form">
+    <div id="box">
+        <div id="name">
+            姓名<br/>
+            <textarea type="textarea" id="textarea1"></textarea>
+        </div>
+        <div id="method_suffix">
+            <div id="method_div">
+                方法<br/>
+                <select name="" id="methods">
+                    {{range .methods}}
+                    <option value="{{getMethod .}}">{{.}}</option>
+                    {{end}}
+                </select>
+            </div>
+            <div id="suffix_div">
+                后缀<br/>
+                <select name="" id="suffixs">
+                    {{range .suffixs}}
+                    <option value="{{.}}">{{.}}</option>
+                    {{end}}
+                </select><br/><br/><br/>
+                <div>
+                    自定义后缀
+                </div>
+                <input type="text" placeholder="自定义后缀" id="zidingyi"/>
+            </div>
+        </div>
+        <div id="out">
+            转换结果<br>
+            <textarea type="textarea" id="textarea2"></textarea>
+        </div>
+    </div>
+    <div id="btn">
+        <div class="left">
+            <input id="file" type="file"/>
+            <input
+                    id="upload"
+                    type="button"
+                    value="提交"
+                    style="margin-right: 20px"
+            />
+        </div>
+        <div class="mid">
+            <input type="button" id="convert" value="转换"/>
+            <input type="button" id="reset" value="清空"/>
+        </div>
+        <div class="right">
+            <select name="" id="file_type">
+                <option value="txt">txt</option>
+                <option value="xlsx" disabled="disabled">xlsx</option>
+            </select>
+            <input
+                    id="download"
+                    type="button"
+                    value="下载"
+                    style="margin-right: 20px"
+            />
+        </div>
+    </div>
+
+</form>
+
+<script type="text/javascript">
+
+    $("#reset").click(() => {
+        $("#textarea1").val("")
+        $("#textarea2").val("")
+    })
+
+    $("#upload").click(() => {
+        var formData = new FormData();
+        formData.append('file', $('#file')[0].files[0]);
+        fileName = $('#file')[0].files[0].name
+        if (!(fileName.endsWith('.txt') || fileName.endsWith('.xlsx'))) {
+            alert("目前仅支持txt、xlsx文件")
+        } else {
+            $.ajax({
+                url: 'http://{{.ip}}:{{.port}}/upload',
+                type: 'POST',
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    $("#textarea1").val(res.names)
+                },
+            })
+
+        }
+    });
+
+    $("#download").click(() => {
+        var type = $("#file_type option:selected").val();
+        var text = $("#textarea2").val();
+        var body = {
+            type,
+            text
+        }
+        console.log(type)
+        if (text === '') {
+            alert("结果为空，不予下载")
+        } else {
+            $.ajax({
+                url: 'http://{{.ip}}:{{.port}}/download',
+                type: 'POST',
+                data: JSON.stringify(body),
+                responseType: 'blob',
+                success: function (res) {
+                    let fileName = 'result.' + type
+                    let blob = new Blob([res]);
+                    //创建一个a标签并设置href属性，之后模拟人为点击下载文件
+                    const link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = fileName;//设置下载文件名
+                    link.click();//模拟点击
+                    link.style.display = 'none'
+                    //释放资源并删除创建的a标签
+                    URL.revokeObjectURL(link.href);
+                    document.body.removeChild(link);
+                }
+            })
+        }
+    });
+
+    $("#convert").click(() => {
+        var names = $("#textarea1").val();
+        var method = $("#methods option:selected").val();
+        var suffix = $("#suffixs option:selected").val();
+        var mySuffix = $("#zidingyi").val();
+        suffix = mySuffix ? mySuffix : suffix
+        var body = {
+            names,
+            method,
+            suffix
+        }
+        var Body = JSON.stringify(body);
+        getInfo(Body);
+    })
+
+    function getInfo(body) {
+        $.ajax({
+            method: "POST",
+            data: body,
+            url: "http://{{.ip}}:{{.port}}/convert",
+            // headers 就是请求头配置对象
+            success: function (res) {
+                $("#textarea2").val(res.names)
+            },
+        });
+    }
+</script>
+</body>
+</html>
