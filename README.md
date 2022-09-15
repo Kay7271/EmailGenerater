@@ -2,11 +2,9 @@
 
 ## 1. 启动服务
 
-注意：远端部署时，YourIP=虚机ip，本机部署不需要--ip
-
 ## 1.1 Win
 
-1. 使用默认参数[127.0.0.1:9090]
+1. 使用默认端口[9090]
 
    双击打开convertor_win.exe文件
 
@@ -15,14 +13,14 @@
    使用终端进入convertor_win.exe所在目录，输入以下命令
 
    ```shell
-   convertor_win --port [YourPort] --ip [YourIP]
+   convertor_win --port [YourPort]
    ```
 
 ## 1.2 Mac
 
 注意：arm平台未测试
 
-1. 使用默认参数[127.0.0.1:9090]
+1. 使用默认端口[9090]
 
    双击打开convertor_mac文件
 
@@ -31,12 +29,12 @@
    使用终端进入converter_mac所在目录，输入以下命令
    
    ```shell
-   ./converter_mac --port [YourPort] --ip [YourIP]
+   ./converter_mac --port [YourPort]
    ```
 
 ## 1.3 Linux
 
-1. 使用默认参数[127.0.0.1:9090]
+1. 使用默认端口[9090]
 
    双击打开convertor_linux文件
 
@@ -45,7 +43,7 @@
    使用终端进入convertor_linux所在目录，输入以下命令
    
    ```shell
-   ./convertor_linux --port [YourPort] --ip [YourIP]
+   ./convertor_linux --port [YourPort]
    ```
 
 ## 2. 生成邮箱地址

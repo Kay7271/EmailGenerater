@@ -4,27 +4,20 @@ import (
 	"converter/assets"
 	"converter/conf"
 	"converter/controller"
-	"converter/util"
 	"flag"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"html/template"
 	"net/http"
-	"runtime"
 )
 
 func main() {
 
-	var IP string
-	defaultIP := "127.0.0.1"
-
 	var port string
 	defaultPort := "9090"
 
-	var platform = runtime.GOOS
+	//var platform = runtime.GOOS
 
 	flag.StringVar(&port, "port", defaultPort, "server port")
-	flag.StringVar(&IP, "ip", defaultIP, "server ip")
 
 	flag.Parse()
 
@@ -43,8 +36,6 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 
 		c.HTML(http.StatusOK, "index.html", gin.H{
-			"ip":      IP,
-			"port":    port,
 			"methods": conf.Methods,
 			"suffixs": conf.Suffixs,
 		})
@@ -57,10 +48,10 @@ func main() {
 	r.POST("/download", controller.DownloadController)
 	//------------------------------------
 	// 启动服务
-	err := util.OpenBrowser(platform, port)
-	if err != nil {
-		fmt.Printf("[ERROR] open default browser failed on platform: %s", platform)
-	}
+	//err := util.OpenBrowser(platform, port)
+	//if err != nil {
+	//	fmt.Printf("[ERROR] open default browser failed on platform: %s", platform)
+	//}
 
 	r.Run(":" + port)
 }

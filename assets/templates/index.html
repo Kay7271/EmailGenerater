@@ -128,7 +128,7 @@
             alert("目前仅支持txt、xlsx文件")
         } else {
             $.ajax({
-                url: 'http://{{.ip}}:{{.port}}/upload',
+                url: '/upload',
                 type: 'POST',
                 cache: false,
                 data: formData,
@@ -154,7 +154,7 @@
             alert("结果为空，不予下载")
         } else {
             $.ajax({
-                url: 'http://{{.ip}}:{{.port}}/download',
+                url: '/download',
                 type: 'POST',
                 data: JSON.stringify(body),
                 responseType: 'blob',
@@ -194,7 +194,7 @@
         $.ajax({
             method: "POST",
             data: body,
-            url: "http://{{.ip}}:{{.port}}/convert",
+            url: "/convert",
             // headers 就是请求头配置对象
             success: function (res) {
                 $("#textarea2").val(res.names)
