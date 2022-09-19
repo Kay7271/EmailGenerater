@@ -3,7 +3,6 @@ package util
 import (
 	"bytes"
 	"converter/conf"
-	"converter/methods"
 	"fmt"
 	"github.com/mozillazg/go-pinyin"
 	"github.com/tealeg/xlsx"
@@ -43,10 +42,7 @@ func GetPinYin(name string) []string {
 }
 
 func DoConvert(method, suffix, names string) (string, error) {
-	convertor, err := getConvertFunc(method)
-	if err != nil {
-		return "", err
-	}
+	convertor := conf.MethodMap[method]
 	nameSlic := SplitText(names)
 	bfs := bytes.Buffer{}
 	for _, name := range nameSlic {
@@ -57,23 +53,6 @@ func DoConvert(method, suffix, names string) (string, error) {
 		bfs.WriteString(convertor(pinYin) + "@" + suffix + "\n")
 	}
 	return bfs.String(), nil
-}
-
-type Method func(pinyin []string) string
-
-func getConvertFunc(method string) (Method, error) {
-	switch method {
-	case conf.MethodMap[conf.SanFengZhang]:
-		return methods.SanFengZhang, nil
-	case conf.MethodMap[conf.ZhangSanFeng]:
-		return methods.ZhangSanFeng, nil
-	case conf.MethodMap[conf.ZhangSF]:
-		return methods.ZhangSF, nil
-	case conf.MethodMap[conf.ZSF]:
-		return methods.ZSF, nil
-	default:
-		return nil, fmt.Errorf("no such method named: %s", method)
-	}
 }
 
 func readXlsx(bts []byte) string {

@@ -25,13 +25,8 @@ func main() {
 
 	r.StaticFS("assets", http.FS(assets.Static))
 
-	funcMap := template.FuncMap{
-		"getMethod": func(meth string) string {
-			return conf.MethodMap[meth]
-		},
-	}
-
-	r.SetHTMLTemplate(template.Must(template.New("").Funcs(funcMap).ParseFS(assets.Templates, "templates/*")))
+	//r.SetHTMLTemplate(template.Must(template.New("").Funcs(funcMap).ParseFS(assets.Templates, "templates/*")))
+	r.SetHTMLTemplate(template.Must(template.New("").ParseFS(assets.Templates, "templates/*")))
 
 	r.GET("/", func(c *gin.Context) {
 

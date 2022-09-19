@@ -1,24 +1,54 @@
 package conf
 
-const (
-	SanFengZhang = "张三丰 --> sanfeng.zhang"
-	ZhangSanFeng = "张三丰 --> zhangsanfeng"
-	ZhangSF      = "张三丰 --> zhangsf"
-	ZSF          = "张三丰 --> zsf"
-)
+import "converter/methods"
+
+//HY表示-
+//Dot表示.
+
+type Method func(pinyin []string) string
 
 var (
 	Methods = []string{
-		SanFengZhang,
-		ZhangSanFeng,
-		ZhangSF,
-		ZSF,
+		"张三丰 --> zhangsanfeng",
+		"张三丰 --> zhangsf",
+		"张三丰 --> zsf",
+		"张三丰 --> sanfengzhang",
+		"张三丰 --> sfzhang",
+		"张三丰 --> sanfeng.zhang",
+		"张三丰 --> zhang.sanfeng",
+		"张三丰 --> sf.zhang",
+		"张三丰 --> zhang.sf",
+		"张三丰 --> s.fzhang",
+		"张三丰 --> san-feng.zhang",
+		"张三丰 --> sanfeng_zhang",
+		"张三丰 --> sf_zhang",
+		"张三丰 --> zhang_sanfeng",
+		"张三丰 --> zhang_sf",
+		"张三丰 --> san_feng_zhang",
+		"张三丰 --> zhang_san_feng",
+		"张三丰 --> zhang-sanfeng",
+		"张三丰 --> sanfeng-zhang",
 	}
-	MethodMap = map[string]string{
-		"张三丰 --> sanfeng.zhang": "SanFengZhang",
-		"张三丰 --> zhangsanfeng":  "ZhangSanFeng",
-		"张三丰 --> zhangsf":       "ZhangSF",
-		"张三丰 --> zsf":           "ZSF",
+	MethodMap = map[string]Method{
+		"张三丰 --> zhangsanfeng":   methods.ZhangSanFeng,
+		"张三丰 --> zhangsf":        methods.ZhangSF,
+		"张三丰 --> zsf":            methods.ZSF,
+		"张三丰 --> sanfengzhang":   methods.SanFengZhang,
+		"张三丰 --> sfzhang":        methods.SFZhang,
+		"张三丰 --> sanfeng.zhang":  methods.SanFengDotZhang,
+		"张三丰 --> zhang.sanfeng":  methods.ZhangDotSanFeng,
+		"张三丰 --> sf.zhang":       methods.SFDotZhang,
+		"张三丰 --> zhang.sf":       methods.ZhangDotSF,
+		"张三丰 --> s.fzhang":       methods.SDotFZhang,
+		"张三丰 --> san-feng.zhang": methods.SanHYFengDotZhang,
+		"张三丰 --> sanfeng_zhang":  methods.SanFeng_Zhang,
+		"张三丰 --> sf_zhang":       methods.SF_Zhang,
+		"张三丰 --> zhang_sanfeng":  methods.Zhang_SanFeng,
+		"张三丰 --> zhang_sf":       methods.Zhang_SF,
+		"张三丰 --> san_feng_zhang": methods.San_Feng_Zhang,
+		"张三丰 --> zhang_san_feng": methods.Zhang_San_Feng,
+		"张三丰 --> zhang-sanfeng":  methods.ZhangHYSanFeng,
+		"张三丰 --> sanfeng-zhang":  methods.SanFengHYZhang,
 	}
 )
 var (
